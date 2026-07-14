@@ -2,7 +2,10 @@ import express from "express";
 import {
   bookByID,
   createBook,
+  deleteBook,
   getBooks,
+  patchBook,
+  updateBook,
 } from "../controllers/book.controller.js";
 
 const router = express.Router();
@@ -13,6 +16,12 @@ router.get("/", getBooks);
 router.post("/", createBook);
 //for book by id
 router.get("/:id", bookByID);
+//put:  changing the whole data
+router.put("/:id", updateBook);
+//patch:only updating a part
+router.patch("/:id", patchBook);
+//Delete Method
+router.delete("/:id", deleteBook);
 
 export default router;
 

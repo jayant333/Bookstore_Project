@@ -69,9 +69,83 @@ export const bookByID = (req, res) => {
   });
 };
 
-export const getAuthors = (req, res) => {
-  res.json(authors);
+//updtaing a book using PUT method
+export const updateBook = (req, res) => {
+  const id = Number(req.params.id);
+  const book = books.find((book) => book.id === id);
+  if (!book) {
+    return (
+      res.status(404),
+      json({
+        success: false,
+        message: "Book not found",
+      })
+    );
+  }
+
+  book.title = req.body.title;
+  book.author = req.body.author;
+  book.price = req.body.price;
+
+  return res.status(200).json({
+    success: true,
+    message: "Book updated successfully",
+    data: book,
+  });
 };
+
+//Using Patch
+export const patchBook = (req, res) => {
+  const id = Number(req.params.id);
+  console.log(id);
+
+  const book = books.find((book) => book.id === id);
+
+  if (!book) {
+    return res.status(404).json({
+      success: true,
+      message: "Book not found",
+    });
+  }
+  if (req.body.title) {
+    book.title = req.body.title;
+  }
+  if (req.body.author) {
+    book.author = req.body.author;
+  }
+  if (req.body.price) {
+    book.price = req.body.price;
+  }
+
+  return res.status(200).json({
+    success: true,
+    message: "Patch update sucessful",
+    data: book,
+  });
+};
+
+//Delete Function
+export const deleteBook = (req, res) => {
+  const id = Number(req.params.id);
+  const index = books.findIndex((book) => book.id === id);
+  if (!index) {
+    res.status(404).json({
+      success: false,
+      message: "Book not found",
+    });
+  }
+  const updatedBooks = books.toSpliced(index, 1);
+
+  return res.status(200).json({
+    success: true,
+    message: "Book removed successfully",
+    data: updatedBooks,
+  });
+};
+
+// export const getAuthors = (req, res) => {
+//   res.json(authors);
+// };
 
 export const handleNotFound = (req, res) => {
   res.status(404).json({
