@@ -1,4 +1,5 @@
 import { books, authors } from "../data/data.js";
+import { AppError } from "../utils/AppError.js";
 
 export const homePage = (req, res) => {
   res.send("Welcome to the Bookstore Api");
@@ -59,11 +60,21 @@ export const createBook = (req, res) => {
 };
 
 //using req.param
-export const bookByID = (req, res) => {
+export const bookByID = (req, res, next) => {
   const { id } = req.params;
+
+  const bookId = Number(id);
+
+  if (Number.isNaN(bookId)) {
+    return next(new AppError("Bad request", 400));
+  }
+
   const book = books.find((book) => book.id === Number(id));
-  console.log(id);
-  res.json({
+
+  if (!book) {
+    return next(new AppError("Book not found", 404));
+  }
+  res.status(200).json({
     success: true,
     data: book,
   });
