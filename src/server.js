@@ -1,12 +1,16 @@
+import "dotenv/config";
+import { config } from "./config/config.js";
 import express from "express";
 import bookRoutes from "./routes/book.routes.js";
-import { handleNotFound } from "./controllers/book.controller.js";
 import { errorHandler } from "./middleware/error.middleware.js";
+import { logger } from "./middleware/logger.middleware.js";
+import { handleNotFound } from "./middleware/handlenotfound.middleware.js";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = config.port;
 
 app.use(express.json());
+app.use(logger);
 //will load every route
 app.use("/books", bookRoutes);
 
@@ -21,5 +25,5 @@ app.use(handleNotFound);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Backend running on port ${PORT}`);
+  console.log(`sever runnig on http://localhost:${PORT}`);
 });

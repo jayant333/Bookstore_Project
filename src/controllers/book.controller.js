@@ -36,7 +36,7 @@ export const createBook = (req, res) => {
   const { title, price, author } = req.body;
 
   if (!title || !author || !price == null) {
-    res.status(400).json({
+    return res.status(400).json({
       success: false,
       message: "All fields are required",
     });
@@ -139,8 +139,9 @@ export const patchBook = (req, res) => {
 export const deleteBook = (req, res) => {
   const id = Number(req.params.id);
   const index = books.findIndex((book) => book.id === id);
-  if (!index) {
-    res.status(404).json({
+
+  if (index < 0) {
+    return res.status(404).json({
       success: false,
       message: "Book not found",
     });
@@ -157,10 +158,3 @@ export const deleteBook = (req, res) => {
 // export const getAuthors = (req, res) => {
 //   res.json(authors);
 // };
-
-export const handleNotFound = (req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "404: Page not Found",
-  });
-};
