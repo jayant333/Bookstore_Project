@@ -7,13 +7,16 @@ import {
   patchBook,
   updateBook,
 } from "../controllers/book.controller.js";
+import { validateCreateBook } from "../middleware/validateBook.js";
+import { validate } from "../middleware/validate.js";
+import { createBookSchema } from "../schemas/book.schema.js";
 
 const router = express.Router();
 
 //to get all books
 router.get("/", getBooks);
 //to create a new book
-router.post("/", createBook);
+router.post("/", validate(createBookSchema), createBook);
 //for book by id
 router.get("/:id", bookByID);
 //put:  changing the whole data

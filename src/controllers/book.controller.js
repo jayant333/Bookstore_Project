@@ -118,15 +118,18 @@ export const patchBook = (req, res) => {
       message: "Book not found",
     });
   }
-  if (req.body.title) {
-    book.title = req.body.title;
-  }
-  if (req.body.author) {
-    book.author = req.body.author;
-  }
-  if (req.body.price) {
-    book.price = req.body.price;
-  }
+  // if (req.body.title) {
+  //   book.title = req.body.title;
+  // }
+  // if (req.body.author) {
+  //   book.author = req.body.author;
+  // }
+  // if (req.body.price) {
+  //   book.price = req.body.price;
+  //   }
+
+  //using Object.assign()
+  Object.assign(book, req.body);
 
   return res.status(200).json({
     success: true,
