@@ -22,7 +22,14 @@ const bookSchema = new mongoose.Schema(
     },
     genre: {
       type: String,
-      enum: ["Programming", "Novel", "History", "Science", "Biography"],
+      enum: [
+        "Programming",
+        "Novel",
+        "History",
+        "Science",
+        "Biography",
+        "Finance",
+      ],
       required: [true, "Genre is required"],
 
       trim: true,
