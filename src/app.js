@@ -7,6 +7,7 @@ import bookRoutes from "./routes/book.routes.js";
 const app = express();
 app.use(express.json());
 app.use(logger);
+
 //will load every route
 app.use("/books", bookRoutes);
 

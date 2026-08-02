@@ -1,83 +1,83 @@
-import { books, authors } from "../data/data.js";
 import { AppError } from "../utils/AppError.js";
+import Book from "../models/book.model.js";
 
 export const homePage = (req, res) => {
   res.send("Welcome to the Bookstore Api");
 };
 
-export const getBooks = (req, res) => {
-  //console.log(req.query);
-  const { author, search, sort } = req.query;
-  let filteredBooks = [...books];
-  if (author) {
-    filteredBooks = books.filter(
-      (book) => book.author.toLowerCase() === author.toLowerCase(),
-    );
-  }
-  if (search) {
-    filteredBooks = filteredBooks.filter((book) =>
-      book.title.toLocaleLowerCase().includes(search.toLowerCase()),
-    );
-  }
-  if (sort === "price") {
-    filteredBooks.sort((a, b) => a.price - b.price);
-  }
+//old code to get books
+// export const getBooks = async (req, res, next) => {
+//   //console.log(req.query);
+//   const { author, search, sort } = req.query;
+//   let filteredBooks = [...books];
+//   if (author) {
+//     filteredBooks = books.filter(
+//       (book) => book.author.toLowerCase() === author.toLowerCase(),
+//     );
+//   }
+//   if (search) {
+//     filteredBooks = filteredBooks.filter((book) =>
+//       book.title.toLocaleLowerCase().includes(search.toLowerCase()),
+//     );
+//   }
+//   if (sort === "price") {
+//     filteredBooks.sort((a, b) => a.price - b.price);
+//   }
 
-  if (sort === "title") {
-    filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+//   if (sort === "title") {
+//     filteredBooks.sort((a, b) => a.title.localeCompare(b.title));
+//   }
+//   return res.status(200).json({
+//     success: true,
+//     data: filteredBooks,
+//   });
+// };
+
+export const getBooks = async (req, res, next) => {
+  try {
+    const books = await Book.find();
+    res.status(200).json({
+      success: true,
+      count: books.length,
+      data: books,
+    });
+  } catch (error) {
+    next(error);
   }
-  return res.status(200).json({
-    success: true,
-    data: filteredBooks,
-  });
 };
 
-export const createBook = (req, res) => {
-  const { title, price, author } = req.body;
+export const createBook = async (req, res, next) => {
+  try {
+    console.log(req.body);
 
-  if (!title || !author || !price == null) {
-    return res.status(400).json({
-      success: false,
-      message: "All fields are required",
+    const newBook = await Book.create(req.body);
+
+    return res.status(201).json({
+      success: true,
+      message: "Books Added Successfully",
+      data: newBook,
     });
+  } catch (error) {
+    next(error);
   }
-
-  const newBook = {
-    id: books.length + 1,
-    title,
-    price,
-    author,
-  };
-  console.log(newBook);
-
-  books.push(newBook);
-
-  return res.status(201).json({
-    success: true,
-    message: "Books Added Successfully",
-    data: newBook,
-  });
 };
 
 //using req.param
-export const bookByID = (req, res, next) => {
+export const bookByID = async (req, res, next) => {
   const { id } = req.params;
 
-  const bookId = Number(id);
-
-  if (Number.isNaN(bookId)) {
-    return next(new AppError("Bad request", 400));
+  try {
+    const book = await Book.findById(id);
+    if (!book) {
+      return next(new AppError("Book not found", 404));
+    }
+    res.status(200).json({
+      success: true,
+      data: book,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  const book = books.find((book) => book.id === Number(id));
-
-  if (!book) {
-    return next(new AppError("Book not found", 404));
-  }
-  res.status(200).json({
-    success: true,
-    data: book,
-  });
 };
 
 //updtaing a book using PUT method
