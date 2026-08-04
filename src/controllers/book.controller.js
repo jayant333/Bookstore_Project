@@ -20,8 +20,6 @@ export const getBooks = asyncHandler(async (req, res, next) => {
   }
   res.status(200).json({
     success: true,
-    page,
-    limit,
     count: books.length,
     data: books,
   });
