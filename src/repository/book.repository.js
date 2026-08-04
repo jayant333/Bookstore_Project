@@ -1,4 +1,4 @@
-import Book from "../models/book.model";
+import Book from "../models/book.model.js";
 
 //creates book
 export const createBookRepository = async (bookData) => {
