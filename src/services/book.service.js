@@ -11,8 +11,17 @@ export const createBookService = async (bookData) => {
 };
 
 //service to get all books
-export const getAllBookService = async () => {
-  return await getAllBookRepository();
+export const getAllBookService = async (query) => {
+  const page = Number(query.page) || 1;
+  const limit = Number(query.limit) || 10;
+
+  const books = await getAllBookRepository({ page, limit, query });
+
+  return {
+    books,
+    page,
+    limit,
+  };
 };
 
 //service to get books by id

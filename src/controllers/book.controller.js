@@ -14,12 +14,14 @@ export const homePage = (req, res) => {
 };
 
 export const getBooks = asyncHandler(async (req, res, next) => {
-  const books = await getAllBookService();
+  const { books, page, limit } = await getAllBookService(req.query);
   if (!books) {
     throw new AppError("No Book Found", 404);
   }
   res.status(200).json({
     success: true,
+    page,
+    limit,
     count: books.length,
     data: books,
   });

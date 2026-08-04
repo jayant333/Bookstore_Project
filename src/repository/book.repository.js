@@ -6,8 +6,37 @@ export const createBookRepository = async (bookData) => {
 };
 
 //get all book
-export const getAllBookRepository = async () => {
-  return await Book.find();
+export const getAllBookRepository = async ({ page, limit, query }) => {
+  const skip = (page - 1) * limit;
+  console.log(query, "<<<<<<<");
+
+  //filtering books
+  const filter = {}; //monogbd automatically filters
+  if (query.author) {
+    filter.author = query.author;
+  }
+
+  if (query.category) {
+    filter.category = query.category;
+  }
+
+  if (query.search) {
+    filter.title = {
+      $regex: query.search,
+      $options: "i", //i means case-insensitive
+    };
+  }
+
+  let mongoQuery = Book.find(filter);
+
+  if (query.sort) {
+    mongoQuery = mongoQuery.sort(query.sort);
+  }
+
+  if (query.fields) {
+    mongoQuery = mongoQuery.select(query.fields.replaceAll(",", " "));
+  }
+  return await mongoQuery.skip(skip).limit(limit);
 };
 
 //finds book by id
