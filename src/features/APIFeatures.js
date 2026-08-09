@@ -1,16 +1,28 @@
 export class APIFeatures {
-  constructor(query, queryString) {
+  constructor(query, queryString, searchableFields = []) {
     this.query = query;
     this.queryString = queryString;
+    this.searchableFields = searchableFields;
+    console.log(query, queryString, searchableFields);
   }
 
   //filter operation
   filter() {
-    const filter = {};
-    if (this.queryString.genre) {
-      filter.genre = this.queryString.genre;
-    }
-    this.query = this.query.find(filter);
+    const queryObj = { ...this.queryString };
+
+    const excludeFields = ["page", "sort", "limit", "fields", "search"];
+
+    excludeFields.forEach((field) => delete queryObj[field]);
+
+    let queryStr = JSON.stringify(queryObj);
+
+    queryStr = queryStr.replace(
+      /\b(gte|gt|lte|lt|in|ne)\b/g,
+      (match) => `$${match}`,
+    );
+
+    this.query = this.query.find(JSON.parse(queryStr));
+
     return this;
   }
 
@@ -33,13 +45,16 @@ export class APIFeatures {
   }
 
   //search
-  serach() {
-    if (this.queryString.search) {
+  search() {
+    if (this.queryString.search && this.searchableFields.length) {
+      const keyword = this.queryString.search;
       this.query = this.query.find({
-        title: {
-          $regex: this.queryString.search,
-          $options: "i", //i means case-insensitive
-        },
+        $or: this.searchableFields.map((field) => ({
+          [field]: {
+            $regex: keyword,
+            $options: "i",
+          },
+        })),
       });
     }
     return this;

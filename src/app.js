@@ -5,6 +5,7 @@ import { logger } from "./middleware/logger.middleware.js";
 import bookRoutes from "./routes/book.routes.js";
 
 const app = express();
+app.set("query parser", "extended");
 app.use(express.json());
 app.use(logger);
 

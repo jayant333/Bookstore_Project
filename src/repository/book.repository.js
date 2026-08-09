@@ -8,9 +8,9 @@ export const createBookRepository = async (bookData) => {
 
 //get all book
 export const getAllBookRepository = async (query) => {
-  const features = new APIFeatures(Book.find(), query)
+  const features = new APIFeatures(Book.find(), query, ["title", "author"])
     .filter()
-    .serach()
+    .search()
     .sort()
     .limitFields()
     .pagination();
