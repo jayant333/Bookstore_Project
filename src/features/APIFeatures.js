@@ -3,7 +3,6 @@ export class APIFeatures {
     this.query = query;
     this.queryString = queryString;
     this.searchableFields = searchableFields;
-    console.log(query, queryString, searchableFields);
   }
 
   //filter operation
@@ -70,5 +69,9 @@ export class APIFeatures {
     this.query = this.query.skip(skip).limit(limit);
 
     return this;
+  }
+
+  getFilter() {
+    return this.query.getFilter();
   }
 }

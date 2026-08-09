@@ -14,14 +14,12 @@ export const homePage = (req, res) => {
 };
 
 export const getBooks = asyncHandler(async (req, res, next) => {
-  const { books, page, limit } = await getAllBookService(req.query);
-  if (!books) {
-    throw new AppError("No Book Found", 404);
-  }
+  const { documents, pagination } = await getAllBookService(req.query);
+
   res.status(200).json({
     success: true,
-    count: books.length,
-    data: books,
+    pagination,
+    data: documents,
   });
 });
 
@@ -45,9 +43,7 @@ export const bookByID = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
   const book = await getBookByIDService(id);
-  if (!book) {
-    throw new AppError("Book not found", 404);
-  }
+
   res.status(200).json({
     success: true,
     data: book,
@@ -86,7 +82,7 @@ export const patchBook = asyncHandler(async (req, res, next) => {
   const updatedBook = await updateBookService(id, body);
 
   if (!updatedBook) {
-    throw new AppError("Book not Found", 400);
+    throw new AppError("Book not Found", 404);
   }
 
   res.status(200).json({
@@ -106,7 +102,7 @@ export const deleteBook = asyncHandler(async (req, res, next) => {
   const deletedBook = await findByIdAndDeleteService(id);
 
   if (!deletedBook) {
-    throw new AppError("Book not found", 400);
+    throw new AppError("Book not found", 404);
   }
 
   return res.status(200).json({
