@@ -7,7 +7,6 @@ import {
   patchBook,
   updateBook,
 } from "../controllers/book.controller.js";
-import { validateCreateBook } from "../middleware/validateBook.js";
 import { validate } from "../middleware/validate.js";
 import { createBookSchema } from "../schemas/book.schema.js";
 

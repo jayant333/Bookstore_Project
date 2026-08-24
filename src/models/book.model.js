@@ -12,7 +12,6 @@ const bookSchema = new mongoose.Schema(
     author: {
       type: String,
       required: [true, "Author is required"],
-
       trim: true,
     },
     price: {

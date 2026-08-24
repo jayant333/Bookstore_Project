@@ -61,8 +61,8 @@ export class APIFeatures {
 
   //pagination
   pagination() {
-    const page = Number(this.queryString.page) || 1;
-    const limit = Number(this.queryString.limit) || 10;
+    const page = Math.max(Number(this.queryString.page) || 1,1);
+    const limit = Math.max(Number(this.queryString.limit) || 10);
 
     const skip = (page - 1) * limit;
 
