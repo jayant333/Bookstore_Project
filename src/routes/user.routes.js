@@ -1,10 +1,13 @@
 import express from "express";
 import { validate } from "../middleware/validate.js";
-import { createUserSchema } from "../schemas/user.schema.js";
-import { registerUser } from "../controllers/user.controller.js";
+import { createUserSchema, loginUserSchema } from "../schemas/user.schema.js";
+import { loginUser, registerUser } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
+//create user route
 router.post("/register", validate(createUserSchema), registerUser);
 
+//login route
+router.post("/login", validate(loginUserSchema), loginUser);
 export default router;
