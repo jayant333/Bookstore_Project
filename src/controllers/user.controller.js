@@ -1,8 +1,5 @@
-import { UserRepository } from "../repository/user.repository.js";
-import { UserService } from "../services/user.service.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-
-const userService = new UserService(new UserRepository());
+import { userService } from "../services/index.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const user = await userService.register(req.body);

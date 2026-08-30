@@ -16,6 +16,17 @@ export class UserService {
     return this.userRepository.findByEmailWithPassword(email);
   }
 
+  //to get user by id
+  async getUserById(id) {
+    const user = await this.userRepository.findById(id);
+
+    if (!user) {
+      throw new AppError("user not found", 404);
+    }
+
+    return user;
+  }
+
   async login(email, password) {
     const user = await this.userRepository.findByEmailWithPassword(email);
 

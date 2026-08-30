@@ -12,7 +12,7 @@ export const homePage = (req, res) => {
 
 export const getBooks = asyncHandler(async (req, res) => {
   const result = await bookService.getAllBookService(req.query);
-
+  console.log("Controller reached");
   res.status(200).json({
     success: true,
     pagination: result.pagination,
@@ -21,8 +21,6 @@ export const getBooks = asyncHandler(async (req, res) => {
 });
 
 export const createBook = asyncHandler(async (req, res) => {
-  console.log(req.body);
-
   const newBook = await bookService.createBookService(req.body);
 
   return res.status(201).json({

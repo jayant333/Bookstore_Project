@@ -9,11 +9,15 @@ import {
 } from "../controllers/book.controller.js";
 import { validate } from "../middleware/validate.js";
 import { createBookSchema } from "../schemas/book.schema.js";
+import { createProtect } from "../middleware/authMiddleware.js";
+import { userService } from "../services/index.js";
 
 const router = express.Router();
+//protect middleware
+const protect = createProtect(userService);
 
 //to get all books
-router.get("/", getBooks);
+router.get("/", protect, getBooks);
 //to create a new book
 router.post("/", validate(createBookSchema), createBook);
 //for book by id
