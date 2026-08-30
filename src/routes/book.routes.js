@@ -11,6 +11,7 @@ import { validate } from "../middleware/validate.js";
 import { createBookSchema } from "../schemas/book.schema.js";
 import { createProtect } from "../middleware/authMiddleware.js";
 import { userService } from "../services/index.js";
+import { authorize } from "../middleware/authorizationMiddleware.js";
 
 const router = express.Router();
 //protect middleware
@@ -19,15 +20,21 @@ const protect = createProtect(userService);
 //to get all books
 router.get("/", protect, getBooks);
 //to create a new book
-router.post("/", validate(createBookSchema), createBook);
+router.post(
+  "/",
+  protect,
+  authorize("admin"),
+  validate(createBookSchema),
+  createBook,
+);
 //for book by id
-router.get("/:id", bookByID);
+router.get("/:id", protect, bookByID);
 //put:  changing the whole data
-router.put("/:id", updateBook);
+router.put("/:id", protect, authorize("user", "admin"), updateBook);
 //patch:only updating a part
-router.patch("/:id", patchBook);
+router.patch("/:id", protect, authorize("admin"), patchBook);
 //Delete Method
-router.delete("/:id", deleteBook);
+router.delete("/:id", protect, authorize("admin"), deleteBook);
 
 export default router;
 
