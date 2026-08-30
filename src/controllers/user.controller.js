@@ -25,10 +25,10 @@ export const findUser = asyncHandler(async (req, res) => {
 export const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await userService.login(email, password);
+  const result = await userService.login(email, password);
 
   res.status(200).json({
     success: true,
-    data: user,
+    data: result,
   });
 });

@@ -1,5 +1,7 @@
 import bcrypt from "bcrypt";
 import { AppError } from "../utils/AppError.js";
+import jwt from "jsonwebtoken";
+import { config } from "../config/config.js";
 
 export class UserService {
   constructor(userRepository) {
@@ -27,6 +29,10 @@ export class UserService {
       throw new AppError("Invalid email or password", 401);
     }
 
-    return user;
+    const token = jwt.sign({ id: user._id }, config.jwtSecret, {
+      expiresIn: config.jwtExpiresIn,
+    });
+
+    return { user, token };
   }
 }
