@@ -4,10 +4,18 @@ import { handleNotFound } from "./middleware/handlenotfound.middleware.js";
 import { logger } from "./middleware/logger.middleware.js";
 import bookRoutes from "./routes/book.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import helmet from "helmet";
+import cors from "cors";
+import { config } from "./config/config.js";
+import mongoSanitize from "express-mongo-sanitize";
 
 const app = express();
+app.use(helmet());
+
+app.use(cors({ origin: config.corsOrigin }));
 app.set("query parser", "extended");
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
+app.use(mongoSanitize());
 app.use(logger);
 
 //will load every route
