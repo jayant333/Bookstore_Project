@@ -10,9 +10,13 @@ import {
 import { validate } from "../middleware/validate.js";
 import { createBookSchema } from "../schemas/book.schema.js";
 import { createProtect } from "../middleware/authMiddleware.js";
-import { userService } from "../services/index.js";
+import { userService, bookService } from "../services/index.js";
 import { authorize } from "../middleware/authorizationMiddleware.js";
 import { authorizePermission } from "../middleware/permissionMiddleware.js";
+import { authorizePolicy } from "../middleware/policyMiddleware.js";
+import { loadBook } from "../middleware/resourceMiddleware.js";
+
+import { canUpdateBook, canDeleteBook } from "../policies/book.policy.js";
 
 const router = express.Router();
 //protect middleware
@@ -37,6 +41,8 @@ router.put(
   protect,
   authorize("user", "admin"),
   authorizePermission("book:update"),
+  loadBook(bookService),
+  authorizePolicy(canUpdateBook),
   updateBook,
 );
 //patch:only updating a part
@@ -47,6 +53,8 @@ router.delete(
   protect,
   authorize("admin"),
   authorizePermission("book:delete"),
+  loadBook(bookService),
+  authorizePolicy(canDeleteBook),
   deleteBook,
 );
 
